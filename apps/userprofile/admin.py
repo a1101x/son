@@ -11,8 +11,9 @@ from apps.userprofile.models import User
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
-    list_display = ('email', 'is_admin', 'is_blocked', 'send_app', 'block_user')
-    list_filter = ('is_admin', 'is_staff')
+    list_display = ['email', 'is_admin', 'is_blocked', 'send_app', 'block_user']
+    list_editable = ['is_blocked']
+    list_filter = ['is_admin', 'is_staff']
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Permissions', {'fields': ('is_admin', 'is_staff')}),
