@@ -1,0 +1,8 @@
+.DS_Store
+.vscode/
+.idea/
+*.pyc
+*.pyo
+*.mo
+__pycache__/
+media_cdn/

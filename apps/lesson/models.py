@@ -1,0 +1,58 @@
+import os
+
+from django.conf import settings
+from django.db import models
+from django.db.models.signals import pre_save 
+from django.dispatch import receiver
+
+
+def page_upload_to(instance, filename):
+    return os.path.join('pages', filename)
+
+def lesson_upload_to(instance, filename):
+    return os.path.join('lessons', filename)
+
+def lesson_set_upload_to(instance, filename):
+    return os.path.join('lesson_sets', filename)
+
+
+class LessonInfo(models.Model):
+    topic = models.CharField(max_length=255, unique=True)
+    description = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return '{} - {}'.format(self.topic, self.description[:120] + '...' if self.description else '')
+
+
+class LessonSet(LessonInfo):
+    image = models.ImageField(upload_to=lesson_set_upload_to, null=True, blank=True, height_field='height_field',
+                              width_field='width_field')
+    height_field = models.IntegerField(default=0)
+    width_field = models.IntegerField(default=0)
+    file = models.FileField(upload_to=lesson_set_upload_to, null=True, blank=True)
+
+
+class Lesson(LessonInfo):
+    image = models.ImageField(upload_to=lesson_upload_to, null=True, blank=True, height_field='height_field',
+                              width_field='width_field')
+    height_field = models.IntegerField(default=0)
+    width_field = models.IntegerField(default=0)
+    file = models.FileField(upload_to=lesson_upload_to, null=True, blank=True)
+    lesson_set = models.ForeignKey(LessonSet, related_name='lessons')
+
+
+class Page(models.Model):
+    text = models.CharField(max_length=255, blank=True, null=True)
+    image = models.ImageField(upload_to=page_upload_to, null=True, blank=True, height_field='height_field',
+                              width_field='width_field')
+    height_field = models.IntegerField(default=0)
+    width_field = models.IntegerField(default=0)
+    file = models.FileField(upload_to=page_upload_to, null=True, blank=True)
+    page_number = models.PositiveIntegerField(default=0)
+    lesson = models.ForeignKey(Lesson, related_name='pages')
+
+    def __str__(self):
+        return '{} - {}'.format(self.page_number, self.text[:120] + '...' if self.text else '')
