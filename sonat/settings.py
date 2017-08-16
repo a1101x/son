@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     # third party apps
     'rest_framework',
     'rest_framework_jwt',
-    'password_reset',
+    'rest_framework.authtoken',
+    'rest_auth',
 
     # our apps
     'apps.userprofile',
@@ -173,3 +174,9 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=14),
 }
+
+REST_USE_JWT = True
+
+OLD_PASSWORD_FIELD_ENABLED = True
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
