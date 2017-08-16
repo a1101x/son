@@ -5,6 +5,8 @@ from django.db import models
 from django.db.models.signals import pre_save 
 from django.dispatch import receiver
 
+from apps.userprofile.models import User
+
 
 def page_upload_to(instance, filename):
     return os.path.join('pages', filename)
@@ -56,3 +58,11 @@ class Page(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.page_number, self.text[:120] + '...' if self.text else '')
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, related_name='favorites')
+    page = models.ForeignKey(Page)
+
+    def __str__(self):
+        return '{} - {}'.format(self.user, self.page)

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.lesson.models import LessonSet, Lesson, Page
+from apps.lesson.models import LessonSet, Lesson, Page, Favorite
 
 
 class LessonSetInline(admin.TabularInline):
@@ -49,6 +49,12 @@ class PageAdmin(admin.ModelAdmin):
     list_display_links = ['lesson', 'page_number']
 
 
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ['user', 'page']
+    search_fields = ['user__email', 'page__text', 'page__page_number']
+
+
 admin.site.register(LessonSet, LessonSetAdmin)
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Page, PageAdmin)
+admin.site.register(Favorite, FavoriteAdmin)
