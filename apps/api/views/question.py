@@ -21,7 +21,6 @@ class QuestionViewSet(viewsets.ModelViewSet):
     def answer(self, request, pk=None):
         question = self.get_object()
         answers = request.data.get('answers', None)
-        print(answers)
 
         if answers:
             right_answers = question.answers.filter(is_valid=True)
