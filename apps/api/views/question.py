@@ -1,5 +1,6 @@
 from django.db import transaction
 from rest_framework import viewsets, status
+from rest_framework.decorators import detail_route
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin
 from rest_framework.response import Response
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
@@ -15,6 +16,18 @@ class QuestionViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
+
+    @detail_route(methods=['post'], url_path='answer')
+    def answer(self, request, pk=None):
+        question = self.get_object()
+        answers = request.data.get('answers', None)
+        print(answers)
+
+        if answers:
+            right_answers = question.answers.filter(is_valid=True)
+            print(right_answers)
+
+        return Response(QuestionSerializer(question).data)
 
 
 class AnswerViewSet(viewsets.ModelViewSet):

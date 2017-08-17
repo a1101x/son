@@ -79,7 +79,10 @@ class FavoriteViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, view
 class LogLessonViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, viewsets.GenericViewSet):
     # authentication_classes = (JSONWebTokenAuthentication,)
     serializer_class = LogLessonSerializer
-    queryset = LogLesson.objects.all()
+
+    def get_queryset(self):
+        queryset = LogLesson.objects.filter(user=self.request.user)
+        return queryset
 
     def create(self, request, *args, **kwargs):
         with transaction.atomic():
