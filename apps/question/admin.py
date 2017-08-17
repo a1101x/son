@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.question.models import Question, Answer
+from apps.question.models import Question, Answer, UserAnswer
 
 
 class AnswerAdmin(admin.ModelAdmin):
@@ -15,10 +15,6 @@ class QuestionInline(admin.TabularInline):
     extra = 1
 
     def get_extra (self, request, obj=None, **kwargs):
-        """
-        Dynamically sets the number of extra forms. 0 if the related object
-        already exists or the extra configuration otherwise.
-        """
         if obj and obj.answers.all().count() > 0:
             return 0
         return self.extra
@@ -31,5 +27,11 @@ class QuestionAdmin(admin.ModelAdmin):
     search_fields = ['question_text']
 
 
+class UserAnswerAdmin(admin.ModelAdmin):
+    search_fields = ['user__email', 'question__question_text']
+    readonly_fields = ['correct']
+
+
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(Question, QuestionAdmin)
+admin.site.register(UserAnswer, UserAnswerAdmin)

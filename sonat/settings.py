@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     # third party apps
     'rest_framework',
     'rest_framework_jwt',
-    'rest_framework.authtoken',
     'rest_auth',
 
     # our apps
@@ -167,6 +166,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
 JWT_AUTH = {
@@ -177,6 +177,12 @@ JWT_AUTH = {
 
 REST_USE_JWT = True
 
-OLD_PASSWORD_FIELD_ENABLED = True
+OLD_PASSWORD_FIELD_ENABLED = False
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# SENDGRID_API_KEY='sendgrid_api_key'
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_HOST_USER = 'sendgrid_user'
+# EMAIL_HOST_PASSWORD = 'sendgrid_password'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True

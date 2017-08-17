@@ -1,5 +1,7 @@
 import json
 
+from django.core.mail import send_mail
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import View
@@ -9,13 +11,15 @@ from apps.userprofile.models import User
 
 class SendAndroidView(View):
     def get(self, request, email):
-        print(email)
+        send_mail('Your Subject', 'This is a simple text email body.',
+                  'Support <support@sonat.com>', [email])
         return redirect(request.META['HTTP_REFERER'])
 
 
 class SendIOSView(View):
     def get(self, request, email):
-        print(email)
+        send_mail('Your Subject', 'This is a simple text email body.',
+                  'Support <support@sonat.com>', [email])
         return redirect(request.META['HTTP_REFERER'])
 
 

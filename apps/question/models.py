@@ -1,6 +1,7 @@
 from django.db import models
 
 from apps.lesson.models import Lesson
+from apps.userprofile.models import User
 
 
 class Question(models.Model):
@@ -26,3 +27,13 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class UserAnswer(models.Model):
+    user = models.ForeignKey(User,related_name='user_answers')
+    question = models.ForeignKey(Question)
+    correct = models.NullBooleanField(blank=True, null=True)
+    answer_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.user, self.question, self.correct)

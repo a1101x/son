@@ -4,6 +4,7 @@ from apps.lesson.models import LessonSet, Lesson, Page
 
 
 class LessonSetTestCase(TestCase):
+    
     def setUp(self):
         LessonSet.objects.create(topic='topic 1')
         LessonSet.objects.create(topic='topic 2', description='description 2')
@@ -18,6 +19,7 @@ class LessonSetTestCase(TestCase):
 
 
 class LessonTestCase(TestCase):
+    
     def setUp(self):
         self.lesson_set1 = LessonSet.objects.create(topic='topic 1')
         self.lesson_set2 = LessonSet.objects.create(topic='topic 2', description='description 2')
@@ -40,6 +42,7 @@ class LessonTestCase(TestCase):
 
 
 class PageTestCase(TestCase):
+    
     def setUp(self):
         self.lesson_set1 = LessonSet.objects.create(topic='topic 1')
         self.lesson_set2 = LessonSet.objects.create(topic='topic 2', description='description 2')

@@ -4,6 +4,7 @@ from apps.userprofile.models import User
 
 
 class UserTestCase(TestCase):
+    
     def setUp(self):
         User.objects.create(email='test1@gmail.com')
         User.objects.create(email='test2@gmail.com', is_blocked=True)
