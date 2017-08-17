@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from apps.lesson.models import LessonSet, Lesson, Page
+from apps.lesson.models import LessonSet, Lesson, Page, Favorite, LogLesson
+from apps.userprofile.models import User
 
 
 class LessonSetTestCase(TestCase):
@@ -47,7 +48,7 @@ class PageTestCase(TestCase):
         self.lesson_set1 = LessonSet.objects.create(topic='topic 1')
         self.lesson_set2 = LessonSet.objects.create(topic='topic 2', description='description 2')
         self.lesson_1 = Lesson.objects.create(topic='topic 1', lesson_set=self.lesson_set1)
-        self.lesson_2 = Lesson.objects.create(topic='topic 2', description='description 2', lesson_set=self.lesson_set1)
+        self.lesson_2 = Lesson.objects.create(topic='topic 2', description='description2', lesson_set=self.lesson_set1)
         self.lesson_3 = Lesson.objects.create(topic='topic 3', lesson_set=self.lesson_set2)
         page1 = Page.objects.create(text='text1', page_number=1, lesson=self.lesson_1)
         page2 = Page.objects.create(text='text2', page_number=2, lesson=self.lesson_1)
@@ -71,3 +72,30 @@ class PageTestCase(TestCase):
         self.assertTrue(self.lesson_1.pages.all().count() > 1)
         self.assertTrue(self.lesson_2.pages.all().count() > 0)
         self.assertTrue(self.lesson_3.pages.all().count() > 0)
+
+
+class FavoriteTestCase(TestCase):
+    
+    def setUp(self):
+        self.user = User.objects.create(email='test@gmail.com', password='passwd')
+        self.lesson_set1 = LessonSet.objects.create(topic='topic 1')
+        self.lesson_1 = Lesson.objects.create(topic='topic 1', lesson_set=self.lesson_set1)
+        self.page1 = Page.objects.create(text='text1', page_number=1, lesson=self.lesson_1)
+        self.favorite = Favorite.objects.create(user=self.user, page=self.page1)
+
+    def test_favorite(self):
+        self.assertEqual(self.favorite.user, self.user)
+        self.assertEqual(self.favorite.page, self.page1)
+
+class LogLessonTestCase(TestCase):
+    
+    def setUp(self):
+        self.user = User.objects.create(email='test@gmail.com', password='passwd')
+        self.lesson_set1 = LessonSet.objects.create(topic='topic 1')
+        self.lesson_1 = Lesson.objects.create(topic='topic 1', lesson_set=self.lesson_set1)
+        self.log = LogLesson.objects.create(user=self.user, lesson=self.lesson_1, is_viewed=True)
+
+    def test_log(self):
+        self.assertEqual(self.log.user, self.user)
+        self.assertEqual(self.log.lesson, self.lesson_1)
+        self.assertTrue(self.log.is_viewed)

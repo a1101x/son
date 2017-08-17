@@ -19,7 +19,7 @@ def lesson_set_upload_to(instance, filename):
 
 
 class LessonInfo(models.Model):
-    topic = models.CharField(max_length=255, unique=True)
+    topic = models.CharField(max_length=255)
     description = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
@@ -59,6 +59,9 @@ class Page(models.Model):
     def __str__(self):
         return '{} - {}'.format(self.page_number, self.text[:120] + '...' if self.text else '')
 
+    class Meta:
+        ordering = ('page_number',)
+
 
 class Favorite(models.Model):
     user = models.ForeignKey(User, related_name='favorites')
@@ -66,3 +69,12 @@ class Favorite(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.user, self.page)
+
+
+class LogLesson(models.Model):
+    user = models.ForeignKey(User, related_name='viewed_lesson')
+    lesson = models.ForeignKey(Lesson)
+    is_viewed = models.BooleanField(default=True)
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.user, self.lesson, self.is_viewed)

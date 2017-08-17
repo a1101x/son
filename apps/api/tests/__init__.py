@@ -6,3 +6,4 @@ from apps.api.tests.favorite_tests import *
 from apps.api.tests.question_tests import *
 from apps.api.tests.answer_tests import *
 from apps.api.tests.user_answer_tests import *
+from apps.api.tests.log_lesson_tests import *

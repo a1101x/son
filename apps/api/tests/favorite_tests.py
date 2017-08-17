@@ -6,7 +6,6 @@ from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework_jwt import utils
 
-from apps.api.serializers.userprofile import UserSerializer
 from apps.lesson.models import LessonSet, Lesson, Page, Favorite
 from apps.userprofile.models import User
 
@@ -39,6 +38,6 @@ class FavoriteTest(TestCase):
         response = client.get('/api/favorite/', HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_user_answer_delete(self):
+    def test_favorite_delete(self):
         response = client.delete('/api/favorite/{}/'.format(self.favorite.id), HTTP_AUTHORIZATION=self.auth)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)

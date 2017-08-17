@@ -6,7 +6,6 @@ from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework_jwt import utils
 
-from apps.api.serializers.userprofile import UserSerializer
 from apps.lesson.models import LessonSet, Lesson, Page, Favorite
 from apps.question.models import Question
 from apps.userprofile.models import User

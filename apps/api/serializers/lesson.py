@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from apps.api.serializers.userprofile import UserSerializer
-from apps.lesson.models import LessonSet, Lesson, Page, Favorite
+from apps.lesson.models import LessonSet, Lesson, Page, Favorite, LogLesson
 
 
 class LessonSetSerializer(serializers.ModelSerializer):
@@ -31,4 +31,13 @@ class FavoriteSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Favorite
+        fields = '__all__'
+
+
+class LogLessonSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    lesson = LessonSerializer()
+    
+    class Meta:
+        model = LogLesson
         fields = '__all__'
