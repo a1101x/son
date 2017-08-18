@@ -1,0 +1,11 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans %}You're receiving this email because administrator send you link on {{ app_name }}.{% endblocktrans %}
+
+{% trans "Please click on the link below:" %}
+{% block app_link %}
+{{ protocol }}://{{ domain }}{% url 'userprofile:download_app' uidb64=uid time=time token=token device=device %} 
+
+{% trans "Link valid only 30 minutes!" %}
+{% endblock %}
+
+{% endautoescape %}

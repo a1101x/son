@@ -1,0 +1,15 @@
+{% load i18n static %}
+{% block content %}
+
+<form method="post">{% csrf_token %}
+<fieldset class="module aligned">
+    <div class="form-row field-email">
+        {{ form.email.errors }}
+        <label for="id_email">{% trans 'Email address:' %}</label>
+        {{ form.email }}
+    </div>
+    <input type="submit" value="{% trans 'Send app' %}" />
+</fieldset>
+</form>
+
+{% endblock %}

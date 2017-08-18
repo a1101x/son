@@ -6,3 +6,4 @@
 *.mo
 __pycache__/
 media_cdn/
+media/

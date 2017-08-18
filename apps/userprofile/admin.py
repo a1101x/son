@@ -6,6 +6,7 @@ from django.utils.html import format_html
 
 from apps.userprofile.forms import UserChangeForm, UserCreationForm
 from apps.userprofile.models import User
+from apps.userprofile.forms import SendAppForm
 
 
 class UserAdmin(BaseUserAdmin):
@@ -33,8 +34,8 @@ class UserAdmin(BaseUserAdmin):
         return format_html(
             '<a class="button" href="{}">Android</a>&nbsp;&nbsp;'
             '<a class="button" href="{}">iOS</a>',
-            reverse('userprofile:send_android', args=[obj.email]),
-            reverse('userprofile:send_ios', args=[obj.email]),
+            reverse('userprofile:send_app', args=[obj.email, 'android']),
+            reverse('userprofile:send_app', args=[obj.email, 'ios']),
         )
 
     send_app.short_description = 'Send App'
