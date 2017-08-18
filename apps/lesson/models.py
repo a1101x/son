@@ -26,7 +26,7 @@ class LessonInfo(models.Model):
         abstract = True
 
     def __str__(self):
-        return '{} - {}'.format(self.topic, self.description[:120] + '...' if self.description else '')
+        return self.topic
 
 
 class LessonSet(LessonInfo):
@@ -58,9 +58,6 @@ class Page(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.page_number, self.text[:120] + '...' if self.text else '')
-
-    class Meta:
-        ordering = ('page_number',)
 
 
 class Favorite(models.Model):

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.lesson.models import LessonSet, Lesson, Page, Favorite
+from apps.lesson.models import LessonSet, Lesson, Page, Favorite, LogLesson
 
 
 class LessonSetInline(admin.TabularInline):
@@ -21,6 +21,7 @@ class LessonSetAdmin(admin.ModelAdmin):
     inlines = [LessonSetInline]
     list_display = ['topic', 'description']
     search_fields = ['topic', 'description']
+    ordering = ['id']
 
 
 class LessonInline(admin.TabularInline):
@@ -41,17 +42,26 @@ class LessonAdmin(admin.ModelAdmin):
     inlines = [LessonInline]
     list_display = ['topic', 'description']
     search_fields = ['topic', 'description', 'lesson_set__topic', 'lesson_set__description']
+    ordering = ['lesson_set']
 
 
 class PageAdmin(admin.ModelAdmin):
     list_display = ['lesson', 'page_number', 'text']
     search_fields = ['lesson__topic', 'lesson__description', 'text', 'page_number']
     list_display_links = ['lesson', 'page_number']
+    ordering = ['lesson', 'page_number']
 
 
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ['user', 'page']
     search_fields = ['user__email', 'page__text', 'page__page_number']
+    ordering = ['user', 'page']
+
+
+class LogLessonAdmin(admin.ModelAdmin):
+    list_display = ['user', 'lesson', 'is_viewed']
+    search_fields = ['user__email', 'lesson__topic', 'lesson__description']
+    ordering = ['user', 'lesson']
 
 
 admin.site.register(LessonSet, LessonSetAdmin)
