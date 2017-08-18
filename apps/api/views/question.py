@@ -12,7 +12,6 @@ from apps.userprofile.models import User
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
-    # authentication_classes = (JSONWebTokenAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
@@ -20,24 +19,29 @@ class QuestionViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'], url_path='answer')
     def answer(self, request, pk=None):
         question = self.get_object()
-        answers = request.data.get('answers', None)
+        answers = request.data.get('answer', None)
 
         if answers:
-            right_answers = question.answers.filter(is_valid=True)
-            print(right_answers)
+            right_answers = question.answers.filter(is_valid=True, is_active=True)
 
-        return Response(QuestionSerializer(question).data)
+            if len(answers) != right_answers.count():
+                user_answer = UserAnswer.objects.create(user=request.user, question=question, correct=False)
+            else:
+                if list(right_answers) == list(right_answers.filter(id__in=answers)):
+                    user_answer = UserAnswer.objects.create(user=request.user, question=question, correct=True)
+                else:
+                    user_answer = UserAnswer.objects.create(user=request.user, question=question, correct=False)
+
+        return Response(UserAnswerSerializer(user_answer).data)
 
 
 class AnswerViewSet(viewsets.ModelViewSet):
-    # authentication_classes = (JSONWebTokenAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = AnswerSerializer
     queryset = Answer.objects.all()
 
 
 class UserAnswerViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, viewsets.GenericViewSet):
-    # authentication_classes = (JSONWebTokenAuthentication,)
     permission_classes = (IsOwnerOrReadOnly,)
     serializer_class = UserAnswerSerializer
     

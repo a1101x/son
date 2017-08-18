@@ -9,7 +9,6 @@ from apps.userprofile.models import User
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    # authentication_classes = (JSONWebTokenAuthentication,)
     permission_classes = (IsAdminOrReadOnly,)
     serializer_class = UserSerializer
     queryset = User.objects.all()
@@ -18,8 +17,9 @@ class UserViewSet(viewsets.ModelViewSet):
         partial = kwargs.pop('partial', True)
         instance = self.get_object()
 
-        if instance.is_admin:
-            raise ValidationError('Admin user cannot be blocked.')
+        if request.data.get('is_blocked', None) == True:
+            if instance.is_admin:
+                raise ValidationError('Admin user cannot be blocked.')
 
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)

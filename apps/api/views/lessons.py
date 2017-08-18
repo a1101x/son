@@ -3,6 +3,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import detail_route
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin
 from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from apps.api.serializers.lesson import LessonSetSerializer, LessonSerializer, PageSerializer, FavoriteSerializer, \
@@ -12,17 +13,15 @@ from apps.userprofile.models import User
 
 
 class LessonSetViewSet(viewsets.ModelViewSet):
-    # authentication_classes = (JSONWebTokenAuthentication,)
     serializer_class = LessonSetSerializer
     queryset = LessonSet.objects.all()
 
 
 class LessonViewSet(viewsets.ModelViewSet):
-    # authentication_classes = (JSONWebTokenAuthentication,)
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
 
-    @detail_route(methods=['get'], url_path='copy')
+    @detail_route(methods=['post'], url_path='copy')
     def copy(self, request, pk=None):
         lesson = self.get_object()
         lesson.id = None
@@ -34,6 +33,19 @@ class LessonViewSet(viewsets.ModelViewSet):
     def order(self, request, pk=None):
         lesson = self.get_object()
         pages = request.data.get('pages', None)
+
+        if pages:
+            if len(pages) != len(set(pages)):
+                raise ValidationError('Pages should not be repeated.')
+            else:
+                lesson_pages = lesson.pages.all()
+                if len(pages) != lesson_pages.count():
+                    raise ValidationError('Num of pages in post not equal to num of pages in lesson.')
+                else:
+                    for k, v in enumerate(lesson_pages):
+                        v.page_number = pages[k]
+                        v.save()
+
         return Response(LessonSerializer(lesson).data)
 
     @detail_route(methods=['get'], url_path='pages')
@@ -44,13 +56,11 @@ class LessonViewSet(viewsets.ModelViewSet):
 
 
 class PageViewSet(viewsets.ModelViewSet):
-    # authentication_classes = (JSONWebTokenAuthentication,)
     serializer_class = PageSerializer
     queryset = Page.objects.all()
 
 
 class FavoriteViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, viewsets.GenericViewSet):
-    # authentication_classes = (JSONWebTokenAuthentication,)
     serializer_class = FavoriteSerializer
     
     def get_queryset(self):
@@ -77,7 +87,6 @@ class FavoriteViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, view
 
 
 class LogLessonViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin, viewsets.GenericViewSet):
-    # authentication_classes = (JSONWebTokenAuthentication,)
     serializer_class = LogLessonSerializer
 
     def get_queryset(self):

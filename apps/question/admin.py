@@ -4,17 +4,18 @@ from apps.question.models import Question, Answer, UserAnswer
 
 
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ['question', 'text', 'is_valid', 'is_active']
+    list_display = ['id', 'question', 'text', 'is_valid', 'is_active']
     list_editable = ['is_valid', 'is_active']
     search_fields = ['question__question_text', 'text']
-    list_display_links = ['question', 'text']
+    list_display_links = ['id', 'question', 'text']
 
 
 class QuestionInline(admin.TabularInline):
     model = Answer
     extra = 1
+    readonly_fields = ['id']
 
-    def get_extra (self, request, obj=None, **kwargs):
+    def get_extra(self, request, obj=None, **kwargs):
         if obj and obj.answers.all().count() > 0:
             return 0
         return self.extra
