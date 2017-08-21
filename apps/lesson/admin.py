@@ -45,7 +45,7 @@ class LessonInline(admin.TabularInline):
 
 class LessonAdmin(admin.ModelAdmin):
     inlines = [LessonInline]
-    list_display = ['topic', 'description']
+    list_display = ['topic', 'lesson_set', 'description']
     search_fields = ['topic', 'description', 'lesson_set__topic', 'lesson_set__description']
     ordering = ['lesson_set']
     fieldsets = (
